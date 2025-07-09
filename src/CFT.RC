@@ -1,0 +1,578 @@
+#include <windows.h>
+#include <owlrc.h>
+#include "cftdef.h"
+#include "dlgdef.h"
+
+CFighter MENU
+BEGIN
+   POPUP "&Fichier"
+   BEGIN
+      MENUITEM "&Nouveau...                          ",   CM_NEWWND
+      MENUITEM SEPARATOR                                 
+      MENUITEM "&Ouvrir...\a                       F3",   CM_LOAD
+      MENUITEM SEPARATOR
+      MENUITEM "&Enregistrer\a                     F2",   CM_SAVE
+      MENUITEM "Enregistrer sous...\a          Alt-F2",   CM_SAVEAS
+      MENUITEM "Enregistrer &tout\a       Alt-Ctrl-F2",   CM_SAVEAS
+      POPUP "Enregistrement Special"
+      BEGIN
+	 MENUITEM "Enregistrer sous &ASCII           ",   CM_SPECASCII
+	 MENUITEM "&Enregistrer &Calibration Data    ",   CM_CALIBASCII
+         MENUITEM "&Enregistrer sous QPro            ",   CM_QPRO
+      END
+      MENUITEM SEPARATOR
+      MENUITEM "&Imprimer\a                     Alt-P",   CM_PRINT
+      MENUITEM "Imprimer sur &fichier\a              ",   CM_PRINTONFILE
+      MENUITEM "Con&figurer l'imprimante\a     Ctrl-P",   CM_PRINTSETUP
+      MENUITEM SEPARATOR
+      MENUITEM "Information                          ",   CM_GETINFO
+      MENUITEM SEPARATOR
+      MENUITEM "&Quitter\a                      Alt-X",   CM_QUIT
+   END
+   POPUP "&Edition"
+   BEGIN
+      MENUITEM "T&itre\a                         Alt-U",  CM_TITLE
+      MENUITEM "Conditions Experimentaux\a       Alt-E",  CM_EXPCONDITION
+      MENUITEM SEPARATOR
+      MENUITEM "Text on Cursor Position\a     Shift-F8",  CM_CURSORTEXTBIS
+      MENUITEM "Text on user-defined X                ",  CM_INSERTCTEXT
+      MENUITEM "&Edit Cursor Text                     ",  CM_EDITCTEXT
+      MENUITEM "Clear All Cursor Text                 ",  CM_CLEARALLCTEXT
+      MENUITEM SEPARATOR
+      MENUITEM "Mark on Cursor Position\a          F12",  CM_ADDMARK
+      MENUITEM "Clear All Mark                        ",  CM_CLEARMARK
+      MENUITEM SEPARATOR
+      MENUITEM "Clear spectrum                        ",  CM_CLEARSPEC
+   END
+   POPUP "&Transfer" 
+   BEGIN
+      MENUITEM "&Transfer (9350)\a      Ctrl-A",          CM_TRANSFER9350
+      MENUITEM "Transfer (9&400)              ",          CM_TRANSFER9400
+      MENUITEM SEPARATOR
+      MENUITEM "Count &Accumulation",                     CM_COUNTACC
+      MENUITEM SEPARATOR
+      MENUITEM "&Connect\a              Ctrl-C",          CM_TCONNECT 
+   END
+   POPUP "&Tracer"
+   BEGIN
+      MENUITEM "&Totale\a                        Alt-T",  CM_TOTALSPEC
+      MENUITEM "&Zoom\a                          Alt-Z",  CM_ZOOMAUTO
+      MENUITEM "Zoom manuel\a                  Shift-Z",  CM_ZOOMMAN
+      MENUITEM SEPARATOR
+      MENUITEM "Zoom pour tous\a            Alt-Ctrl-Z",  CM_ZOOMALL
+      MENUITEM SEPARATOR
+      MENUITEM "&Scaling Manuel\a              Shift-S",  CM_SCALEMAN
+      MENUITEM "&Auto Scaling\a                 Ctrl-S",  CM_AUTOSCALE
+      MENUITEM SEPARATOR
+      MENUITEM "&Same Scale pour tous\a     Alt-Ctrl-S",  CM_SAMESCALE
+      MENUITEM SEPARATOR
+      MENUITEM "&Inversion\a                     Alt-R",  CM_INVERSE
+      MENUITEM SEPARATOR
+      MENUITEM "&Option de tracer                     ",  CM_PLOTOPTION
+   END
+   
+   POPUP "E&talonnage"
+   BEGIN
+      MENUITEM "&Ajouter des Données          F6",      CM_CALIBADD
+      MENUITEM "&Consulter les Coefficients     ",      CM_CALIBVIEW
+      MENUITEM SEPARATOR
+      MENUITEM "&Supprimer Etalonnage           ",      CM_CALIBNEW
+      MENUITEM "&Insèrer Coefficients           ",      CM_CALIBINS
+      MENUITEM SEPARATOR
+      MENUITEM "Edit && Visualisation           ",      CM_CALIBDRAW
+   END
+   POPUP  "&Analyse"
+   BEGIN
+      MENUITEM "&Area Calculation            ",         CM_VISUALAREA
+      MENUITEM "&Calcul des temps de fragment",         CM_CALCULFRAG
+      MENUITEM SEPARATOR
+      MENUITEM "&LS Filter                   ",         CM_LSSMOOTH
+      MENUITEM "&Background Subtraction      ",         CM_BKSUBTRACT
+      MENUITEM "Spectrum S&um                ",         CM_SPECSUM
+   END
+   POPUP "Fe&nêtre"
+   BEGIN
+      MENUITEM "&Cascade      ",                        CM_CASCADECHILDREN
+      MENUITEM "&Mosaïque     ",                        CM_TILECHILDREN
+      MENUITEM "Arrange &Icons",                        CM_ARRANGEICONS
+      MENUITEM "C&lose All    ",                        CM_CLOSECHILDREN
+   END
+
+   POPUP "\a&?"
+   BEGIN
+      MENUITEM "&Index                ",                CM_CFTHELP
+      MENUITEM "&Utilisation de l'aide",  		CM_HELPHELP
+      MENUITEM SEPARATOR
+      MENUITEM "A propos de CFighter  ",  		CM_ABOUT
+   END
+END
+
+Accel ACCELERATORS
+BEGIN
+   VK_F3,       CM_LOAD,                                    VIRTKEY
+   VK_F2,       CM_SAVE,                                    VIRTKEY
+   VK_F2,       CM_SAVEAS,             ALT,                 VIRTKEY
+   VK_F2,       CM_SAVEALL,            ALT,        CONTROL, VIRTKEY
+   VK_P,        CM_PRINT,              ALT,                 VIRTKEY
+   VK_P,        CM_PRINTSETUP,                     CONTROL, VIRTKEY
+   VK_X,        CM_QUIT,               ALT,                 VIRTKEY
+   VK_A,        CM_TRANSFER9350,                   CONTROL, VIRTKEY
+   VK_C,        CM_TCONNECT,                       CONTROL, VIRTKEY
+   VK_U,        CM_TITLE,              ALT,                 VIRTKEY
+   VK_E,        CM_EXPCONDITION,       ALT,   	            VIRTKEY
+   VK_T,        CM_TOTALSPEC,          ALT,                 VIRTKEY
+   VK_Z,        CM_ZOOMAUTO,               ALT,                 VIRTKEY
+   VK_Z,        CM_ZOOMMAN,                 SHIFT,          VIRTKEY
+   VK_Z,        CM_ZOOMALL,            ALT,        CONTROL, VIRTKEY   
+   VK_S,        CM_SCALEMAN,                SHIFT,          VIRTKEY
+   VK_S,        CM_AUTOSCALE,                      CONTROL, VIRTKEY
+   VK_S,        CM_SAMESCALE,          ALT,        CONTROL, VIRTKEY
+   VK_R,        CM_INVERSE,            ALT,                 VIRTKEY  
+   VK_PRIOR,    CM_SCALEUP,                                 VIRTKEY
+   VK_NEXT,     CM_SCALEDOWN,                               VIRTKEY
+   VK_PRIOR,    CM_FSCALEUP,           ALT,                 VIRTKEY
+   VK_NEXT,     CM_FSCALEDOWN,         ALT,                 VIRTKEY
+   VK_HOME,     CM_ZOOM,                                    VIRTKEY
+   VK_END,      CM_UNZOOM,                                  VIRTKEY
+   VK_HOME,     CM_FZOOM,              ALT,                 VIRTKEY
+   VK_END,      CM_FUNZOOM,            ALT,                 VIRTKEY
+   VK_UP,       CM_YSHIFTUP,                                VIRTKEY
+   VK_DOWN,     CM_FYSHIFTDOWN,        ALT,                 VIRTKEY
+   VK_UP,       CM_FYSHIFTUP,          ALT,                 VIRTKEY
+   VK_DOWN,     CM_YSHIFTDOWN,                              VIRTKEY
+   VK_LEFT,     CM_XSHIFTLEFT,                              VIRTKEY
+   VK_RIGHT,    CM_XSHIFTRIGHT,                             VIRTKEY
+   VK_RIGHT,    CM_FXSHIFTRIGHT,       ALT,                 VIRTKEY
+   VK_LEFT,     CM_FXSHIFTLEFT,        ALT,                 VIRTKEY
+   VK_F8,       CM_PUTCURSORTEXT,                           VIRTKEY
+   VK_F8,       CM_CURSORTEXTBIS,           SHIFT,          VIRTKEY
+   VK_F6,       CM_CALIBADD,                                VIRTKEY
+   VK_F12,      CM_ADDMARK,                                 VIRTKEY
+   VK_NUMPAD4,  CM_CC_SLEFT ,                               VIRTKEY
+   VK_NUMPAD6,  CM_CC_SRIGHT,                               VIRTKEY
+   VK_NUMPAD4,  CM_CC_FLEFT ,          ALT,                 VIRTKEY
+   VK_NUMPAD6,  CM_CC_FRIGHT,          ALT,                 VIRTKEY
+END
+
+STRINGTABLE PRELOAD
+BEGIN
+   IDS_DDEERRORTEXT,      "DDE Failed !"
+   IDS_DDEERRORTITLE,     "Error"
+   IDS_SPECWINNAME,       "Spectrum Window N° %03d"
+   IDS_FATALERRORTEXT,    "Close this application, if not there will be serious problems."
+   IDS_FATALERRORTITLE,   "Memory Allocation Error"
+   IDS_MEMALLOCERRORTEXT, "Close other windows as many as possible."
+   IDS_MEMALLOCERRORTITLE,"Memory Allocation Error"
+   IDS_MULTIPLE,          "Multiple"
+   IDS_OPENSPECTRUM,      "Ouvrir un spectre pour memory %d"
+   IDS_STARTDOC,          "Imprimer CFighter Graphique"
+   IDS_PCONFIGERRORTEXT,  "Bien configurer l'imprimante !"
+   IDS_PCONFIGERRORTITLE, "Printer setup error"
+   IDS_FFORMATERRORTEXT,  "Invalid Data Format !"
+   IDS_FFORMATERRORTITLE, "File Open Error"
+   IDS_FWRITEERRORTEXT,   "Cannot write on %s !"
+   IDS_FWRITEERRORTITLE,  "File I/O Error"
+   IDS_FCREATEERRORTEXT,  "Cannot create %s !"
+   IDS_FCREATEERRORTITLE, "File I/O Error"
+   IDS_DELCALCOEFFTEXT,   "Delete previous coefficients ?"
+   IDS_DELCALCOEFFTITLE,  "Warning"
+   IDS_CONNECTERRORTEXT,  "GPIB not connected !"
+   IDS_CONNECTERRORTITLE, "GPIB Connection Error"
+   IDS_GWRITEERRORTEXT,   "Cannot Send GPIB Message !"
+   IDS_GWRITEERRORTITLE,  "GPIB I/O Error"
+   IDS_GREADERRORTEXT,    "Cannot Receive GPIB Data !"
+   IDS_GREADERRORTITLE,   "GPIB I/O Error"
+   IDS_CLEARMARKTEXT,     "Effacer tous les marks ?"
+   IDS_CLEARMARKTITLE,    "Avertissement"
+   IDS_CLEARCTEXTTEXT,    "Effacer tous les textes de curseur ?"
+   IDS_CLEARCTEXTTITLE,   "Avertissement"
+   IDS_CLEARCALIBTEXT,    "Effacer les coefficients d'étalonnage ?"
+   IDS_CLEARCALIBTITLE,   "Avertissement"
+   IDS_NOCALIBOVERTEXT,   "The number of calibration data cannot exceed 80"
+   IDS_NOCALIBOVERTITLE,  "Calibration error"
+   IDS_CALIBFAILTEXT,     "Calibration is failed !"
+   IDS_CALIBFAILTITLE,    "Calibration error"
+   IDS_NOCALIBINSUFFTEXT, "The number of calibration data should be more than 3"
+   IDS_NOCALIBINSUFFTITLE,"Calibration error"
+   IDS_NOMARKOVERTEXT,    "The number of marks cannot exceed 80"
+   IDS_NOMARKOVERTITLE,   "Mark addition error"
+   IDS_ZOOMDLGTITLE,      "Taper les temps"
+   IDS_ZOOMDLGMIN,        "Minimum µs"
+   IDS_ZOOMDLGMAX,        "Maximum µs"
+   IDS_ALLZOOMDLGTITLE,   "Zoomer pour touss"
+   IDS_ALLZOOMDLGMIN,     "Minimum µs"
+   IDS_ALLZOOMDLGMAX,     "Maximum µs"
+   IDS_SCALEDLGTITLE,     "Taper les valeurs de Y"
+   IDS_SCALEDLGMIN,       "Minimum Y"
+   IDS_SCALEDLGMAX,       "Maximum Y"
+   IDS_ALLSCALEDLGTITLE,  "Taper les valeurs de Y"
+   IDS_NOMARKINSUFFTEXT,  "The number of marks should be 3"
+   IDS_NOMARKINSUFFTITLE, "Area calculation error"
+   IDS_BKSUBFAILTEXT,     "Background subtraction is failed !"
+   IDS_BKSUBFAILTITLE,    "Error"
+   IDS_SPECSUMFAILTEXT,   "Spectrum sum is failed !"
+   IDS_SPECSUMFAILTITLE,  "Error"
+   IDS_LSFILTERFAILTEXT,  "LS Filter is failed !"
+   IDS_LSFILTERFAILTITLE, "Error"
+   IDS_CLEARSPECTEXT,     "Effacer le spectre ?"
+   IDS_CLEARSPECTITLE,    "Clear Spectrum"
+END
+
+#include "dlgdef.h"
+
+INPUTDLG DIALOG 100, 50, 140, 55
+STYLE DS_MODALFRAME | WS_POPUP |  WS_CAPTION | WS_SYSMENU
+CAPTION ""
+BEGIN
+    LTEXT "",   ID_I_PROMPT,  10, 5,  120, 10
+    EDITTEXT ID_I_TEXT 10, 15, 120, 12, ES_AUTOHSCROLL | ES_LEFT
+    PUSHBUTTON           "&OK", IDOK,      20, 35,  35, 13
+    PUSHBUTTON      "&Annuler", IDCANCEL,  80, 35,  35, 13
+END
+
+ABOUT DIALOG 140, 80, 90, 133
+STYLE DS_MODALFRAME | WS_POPUP |  WS_CAPTION
+CAPTION "A propos de CFighter"
+BEGIN
+    PUSHBUTTON                  "&OK", IDOK, 0, 120, 90, 13
+END
+
+TITLE DIALOG 100, 50, 210, 85
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Taper les Titres"
+BEGIN
+    LTEXT    "Titre Principe",       -1,  10, 10,  50, 10
+    LTEXT      "X-axis Title",       -1,  10, 25,  50, 10
+    LTEXT      "Y-axis Title",       -1,  10, 40,  50, 10
+    EDITTEXT ID_TITLE, 62,  8, 136, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_XUNIT, 62, 23, 136, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_YUNIT, 62, 38, 136, 12, ES_AUTOHSCROLL | ES_LEFT
+    PUSHBUTTON          "&OK",     IDOK,  55, 65,  40, 13
+    PUSHBUTTON     "&Annuler", IDCANCEL, 115, 65,  40, 13
+END
+
+CALIBADD DIALOG 130, 50, 140, 70
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Taper la Masse"
+BEGIN
+    LTEXT "", ID_CALIBNUM, 10, 8, 120, 10
+    LTEXT "", ID_TIME,     10, 20, 120, 10 
+    LTEXT         "Masse",       -1,  10, 32,  60, 10
+    EDITTEXT ID_MASS, 45, 30, 70, 12, ES_AUTOHSCROLL | ES_LEFT
+    PUSHBUTTON      "&OK",     IDOK,  20, 50,  40, 13
+    PUSHBUTTON "&Annuler", IDCANCEL,  80, 50,  40, 13
+END
+
+CALIBINS DIALOG 100, 50, 120, 115
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Taper les coefficients"
+BEGIN
+    LTEXT    "A",       -1,  15, 30,  10, 10
+    LTEXT    "B",       -1,  15, 44,  10, 10
+    LTEXT    "C",       -1,  15, 58,  10, 10
+    EDITTEXT ID_A, 25, 28, 85, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_B, 25, 42, 85, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_C, 25, 56, 85, 12, ES_AUTOHSCROLL | ES_LEFT
+    CONTROL "Pour tous", ID_OPTION, "BUTTON",  BS_AUTOCHECKBOX,  10, 75, 70, 12
+    PUSHBUTTON          "&OK",     IDOK,  10, 95,  45, 13
+    PUSHBUTTON     "&Annuler", IDCANCEL,  65, 95,  45, 13
+END
+
+CALIBVIEW DIALOG 100, 50, 120, 90
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "coefficients de l'étalonnage"
+BEGIN
+    CONTROL "", ID_A,  "STATIC", SS_LEFT | WS_GROUP, 15, 30, 90, 10
+    CONTROL "", ID_B,  "STATIC", SS_LEFT | WS_GROUP, 15, 42, 90, 10
+    CONTROL "", ID_C,  "STATIC", SS_LEFT | WS_GROUP, 15, 54, 90, 10
+    PUSHBUTTON          "&OK",     IDOK,  10, 70,  45, 13
+    PUSHBUTTON     "&Annuler", IDCANCEL,  65, 70,  45, 13
+END
+
+MINMAX DIALOG 130, 50, 140, 64
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION ""
+BEGIN
+    LTEXT "", ID_MINTITLE,  10, 10,  50, 10, ES_AUTOHSCROLL | ES_LEFT
+    LTEXT "", ID_MAXTITLE,  10, 25,  50, 10, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT   ID_MIN, 65,  8, 65, 12, WS_GROUP
+    EDITTEXT   ID_MAX, 65, 23, 65, 12, WS_GROUP
+    PUSHBUTTON      "&OK",     IDOK,  20, 45,  40, 13
+    PUSHBUTTON "&Annuler", IDCANCEL,  80, 45,  40, 13
+END
+
+SAMESCALE DIALOG 130, 50, 140, 80
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Sma scale for all"
+BEGIN
+    LTEXT "Minimum of y", ID_MINTITLE,  10, 10,  50, 10, ES_AUTOHSCROLL | ES_LEFT
+    LTEXT "Maximum of y", ID_MAXTITLE,  10, 25,  50, 10, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT   ID_MIN, 65,  8, 65, 12
+    EDITTEXT   ID_MAX, 65, 23, 65, 12
+    CONTROL "Fix Base Line", ID_OPTION, "BUTTON",  BS_AUTOCHECKBOX,  10, 40, 100, 12
+    PUSHBUTTON      "&OK",     IDOK,  20, 60,  40, 13
+    PUSHBUTTON "&Annuler", IDCANCEL,  80, 60,  40, 13
+END
+
+TRANSFER9350 DIALOG 125, 50, 150, 100
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Select a LeCroy memory "
+BEGIN
+    CONTROL "M1", ID_MEM0, "BUTTON",  BS_AUTORADIOBUTTON | WS_GROUP,  20, 10, 30, 10
+    CONTROL "M2", ID_MEM1, "BUTTON",  BS_AUTORADIOBUTTON,  20, 25, 30, 10
+    CONTROL "M3", ID_MEM2, "BUTTON",  BS_AUTORADIOBUTTON,  20, 40, 30, 10
+    CONTROL "M4", ID_MEM3, "BUTTON",  BS_AUTORADIOBUTTON,  20, 55, 30, 10
+    CONTROL "TA", ID_MEM4, "BUTTON",  BS_AUTORADIOBUTTON,  60, 10, 30, 10
+    CONTROL "TB", ID_MEM5, "BUTTON",  BS_AUTORADIOBUTTON,  60, 25, 30, 10
+    CONTROL "TC", ID_MEM6, "BUTTON",  BS_AUTORADIOBUTTON,  60, 40, 30, 10
+    CONTROL "TD", ID_MEM7, "BUTTON",  BS_AUTORADIOBUTTON,  60, 55, 30, 10
+    CONTROL "C1", ID_MEM8, "BUTTON",  BS_AUTORADIOBUTTON, 100, 10, 30, 10
+    CONTROL "C2", ID_MEM9, "BUTTON",  BS_AUTORADIOBUTTON, 100, 25, 30, 10
+    CONTROL "C3", ID_MEMA, "BUTTON",  BS_AUTORADIOBUTTON, 100, 40, 30, 10
+    CONTROL "C4", ID_MEMB, "BUTTON",  BS_AUTORADIOBUTTON, 100, 55, 30, 10
+    GROUPBOX "", -1, 10, 3, 130, 65
+    PUSHBUTTON      "&OK",      IDOK, 25, 80, 40, 13
+    PUSHBUTTON  "&Annuler", IDCANCEL, 85, 80, 40, 13
+END
+
+VISUAREA DIALOG 50, 20, 300, 170
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "CFT Area Calculation"
+BEGIN
+    PUSHBUTTON  "&OK",  1, 20, 150,  260, 13
+END
+
+EXPCONDITION DIALOG 50, 10, 300, 220
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Experimental SetUp Parameters"
+FONT 9, "Arial"
+BEGIN
+    GROUPBOX "SOURCE" -1, 5,  4, 135, 51
+       LTEXT "Element", -1,  10, 16, 25, 10
+       LTEXT    "Four", -1,  10, 29, 25, 10
+       LTEXT   "Couv.", -1,  10, 42, 25, 10
+       LTEXT      "He", -1,  80, 16, 10, 10
+       LTEXT      "Ar", -1,  80, 29, 10, 10
+       LTEXT   "Autre", -1,  80, 42, 25, 10
+       EDITTEXT  ID_SELEMENT, 40, 14,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT  ID_SFOUR,    40, 27,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT  ID_SCOUV,    40, 40,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT  ID_SHe,     100, 14,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT  ID_SAr,     100, 27,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT  ID_SOTHER,  100, 40,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX "ACCELERATION", -1, 145, 4, 70, 51
+       LTEXT "V1 (V)", -1, 150, 16, 20, 10
+       LTEXT "V2 (V)", -1, 150, 29, 20, 10
+       LTEXT "V3 (V)", -1, 150, 42, 20, 10
+       EDITTEXT ID_APLATE1, 175, 14, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_APLATE2, 175, 27, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_APLATE3, 175, 40, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX "CHICANE", -1, 220, 4, 75, 51
+       LTEXT "V(C1) = V(C3)", -1, 225, 16, 50, 10
+       LTEXT "C1 (V)", -1, 225, 29, 25, 10
+       LTEXT "C2 (V)", -1, 225, 42, 25, 10
+       EDITTEXT ID_CHICANE1, 255, 27, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_CHICANE2, 255, 40, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX  "1° IONISATION", -1,  5, 58, 142, 38
+       LTEXT   "Type", -1,  10, 70,  20, 10
+       LTEXT "E (eV)", -1,  82, 70,  20, 10
+       LTEXT "Comm.", -1,   10, 83,  25, 10
+       COMBOBOX ID_ITYPE,     30, 68,  47, 50, CBS_DROPDOWN | WS_VSCROLL
+       EDITTEXT ID_IENERGY,  107, 68,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_ICOMMENT,  40, 81, 100, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX  "2° IONISATION", -1,  152, 58, 143, 38
+       LTEXT   "Type", -1,  158, 70,  20, 10
+       LTEXT "E (eV)", -1,  230, 70,  20, 10
+       LTEXT "Comm.", -1,   158, 83,  25, 10
+       COMBOBOX ID_ITYPE1,    178, 68,  47, 50, CBS_DROPDOWN | WS_VSCROLL
+       EDITTEXT ID_IENERGY1,  255, 68,  33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_ICOMMENT1, 188, 81, 100, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX "LENTILLES",      -1, 5,  99, 75, 38
+       LTEXT "L1 (V)", -1, 10, 111,  20, 10
+       LTEXT "L2 (V)", -1, 10, 124,  20, 10
+       EDITTEXT ID_LENS1, 35, 109, 38, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_LENS2, 35, 122, 38, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX "REFLECTRON", -1, 85, 99, 210, 38
+       LTEXT "V1 (V)", -1,  90, 111, 20, 10
+       LTEXT "V2 (V)", -1, 160, 111, 20, 10
+       LTEXT "Ech(V)", -1, 230, 111, 20, 10
+       LTEXT "Angle", -1, 90, 124, 20, 10
+       LTEXT "Comm.", -1, 160, 124, 30, 10
+       EDITTEXT ID_REFV1,    115, 109, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_REFV2,    185, 109, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_REFV3,    255, 109, 33, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_RANGLE,   110, 122, 38, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_RCOMMENT, 190, 122, 98, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX "COMMENTAIRES",  -1, 5, 140, 290, 52
+       LTEXT "Commentaire 1", -1, 10, 152,  50, 10
+       LTEXT "Commentaire 2", -1, 10, 165,  50, 10
+       LTEXT "Commentaire 3", -1, 10, 177,  50, 10
+       EDITTEXT ID_COMMENT1, 65, 150, 220, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_COMMENT2, 65, 163, 220, 12, ES_AUTOHSCROLL | ES_LEFT
+       EDITTEXT ID_COMMENT3, 65, 176, 220, 12, ES_AUTOHSCROLL | ES_LEFT
+    PUSHBUTTON  "&Enregistrer",     IDOK,  20, 200,  120, 13
+    PUSHBUTTON  "&Annuler",     IDCANCEL,  160, 200, 120, 13
+END
+
+INPUTCTEXT DIALOG 100, 50, 140, 90
+STYLE DS_MODALFRAME | WS_POPUP |  WS_CAPTION | WS_SYSMENU
+CAPTION ""
+BEGIN
+    LTEXT "",   ID_I_PROMPT,  10, 5,  120, 10
+    EDITTEXT ID_I_TEXT 10, 15, 120, 12, ES_AUTOHSCROLL | ES_LEFT
+    PUSHBUTTON "&Ajouter T.O.F.", ID_TOF,    20, 35,  95, 13
+    PUSHBUTTON "&Ajouter Masse",   ID_MASS,    20, 50,  95, 13
+    PUSHBUTTON             "&OK", IDOK,      20, 70,  35, 13
+    PUSHBUTTON        "&Annuler", IDCANCEL,  80, 70,  35, 13
+END
+
+INSERTCTEXT DIALOG 130, 50, 140, 65
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION ""
+BEGIN
+    CTEXT "T.O.F.(µs)", -1,  10, 10,  50, 10, ES_AUTOHSCROLL | ES_LEFT
+    CTEXT "Text",       -1,  10, 25,  50, 10, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT   ID_TOF,   65,  8, 65, 12
+    EDITTEXT   ID_CTEXT, 65, 23, 65, 12
+    PUSHBUTTON      "&OK",     IDOK,  20, 45,  40, 13
+    PUSHBUTTON "&Annuler", IDCANCEL,  80, 45,  40, 13
+END
+                                
+CTEXTLIST DIALOG 100, 20, 140, 170
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Edit Cursor Texts"
+BEGIN
+    LTEXT "List of cursor texts", -1, 10, 8, 100, 10
+    CONTROL "", ID_CTEXTLIST, "LISTBOX", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | WS_VSCROLL | LBS_HASSTRINGS | LBS_NOTIFY, 10, 18, 120, 80
+    CONTROL "Time : ", -1,  "STATIC", SS_LEFT | WS_GROUP, 10, 105, 30, 10
+    CONTROL "", ID_TIME,  "STATIC", SS_LEFT | WS_GROUP, 40, 105, 60, 10
+    CONTROL "", ID_EDITCTEXT,  "EDIT",  WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL, 10, 115, 120, 12
+    CONTROL "Modify", ID_MODIFY, "BUTTON", BS_PUSHBUTTON, 10, 130, 55, 13
+    CONTROL "Supprimer", ID_DELETE, "BUTTON", BS_PUSHBUTTON, 75, 130, 55, 13
+    PUSHBUTTON      "&OK",     IDOK,  10, 150,  120, 15
+END
+
+CALIBLIST DIALOG 0, 10, 320, 190
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Calibration Data"
+BEGIN
+    LTEXT "List of calibration data", -1, 220, 8, 80, 10
+    CONTROL "", ID_CALIBLIST, "LISTBOX", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | WS_VSCROLL | LBS_HASSTRINGS | LBS_NOTIFY, 220, 18, 90, 100
+    CONTROL "Time : ", -1,  "STATIC", SS_LEFT | WS_GROUP, 220, 125, 30, 10
+    CONTROL "", ID_TIME,  "STATIC", SS_LEFT | WS_GROUP, 260, 125, 60, 10
+    CONTROL "", ID_EDITCTEXT,  "EDIT",  WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_AUTOHSCROLL, 220, 135, 90, 12
+    CONTROL "Modify", ID_MODIFY, "BUTTON", BS_PUSHBUTTON, 220, 152, 40, 13
+    CONTROL "Supprimer", ID_DELETE, "BUTTON", BS_PUSHBUTTON, 270, 152, 40, 13
+    PUSHBUTTON      "&OK",     IDOK,      10, 170,  300, 13
+END
+
+BKSUBTRACT DIALOG 50, 20, 200, 185
+STYLE WS_POPUP |  WS_CAPTION 
+CAPTION "Background Subtraction"
+BEGIN
+    EDITTEXT ID_a0, 40,  95, 75, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_a1, 40, 110, 75, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_a2, 40, 125, 75, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_a3, 40, 140, 75, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_a4, 40, 155, 75, 12, ES_AUTOHSCROLL | ES_LEFT
+    GROUPBOX "Input initial coefficients", ID_GROUP3, 10, 80, 115, 93, BS_GROUPBOX
+
+    CONTROL "", ID_EQ1, "BUTTON",  BS_AUTORADIOBUTTON | WS_GROUP,  20, 15, 10, 10
+    CONTROL "", ID_EQ2, "BUTTON",  BS_AUTORADIOBUTTON,  20, 35, 10, 10
+    CONTROL "", ID_EQ3, "BUTTON",  BS_AUTORADIOBUTTON,  20, 55, 10, 10
+    GROUPBOX "Type of fitting", ID_GROUP1, 10, 5, 180, 70, BS_GROUPBOX
+
+    CONTROL "memory 1", ID_MEM1, "BUTTON",  BS_AUTORADIOBUTTON | WS_GROUP,  140,  90, 45, 10
+    CONTROL "memory 2", ID_MEM2, "BUTTON",  BS_AUTORADIOBUTTON,  140, 100, 45, 10
+    CONTROL "memory 3", ID_MEM3, "BUTTON",  BS_AUTORADIOBUTTON,  140, 110, 45, 10
+    CONTROL "memory 4", ID_MEM4, "BUTTON",  BS_AUTORADIOBUTTON,  140, 120, 45, 10
+    CONTROL "memory 5", ID_MEM5, "BUTTON",  BS_AUTORADIOBUTTON,  140, 130, 45, 10
+    GROUPBOX "target", ID_GROUP2, 130, 80, 60, 65, BS_GROUPBOX
+
+    PUSHBUTTON      "&OK",     IDOK,  130, 147,  60, 12
+    PUSHBUTTON "&Annuler", IDCANCEL,  130, 161,  60, 12
+END
+
+SPECTRUMSUM DIALOG 80, 20, 100, 135
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Spectrum Sum"
+BEGIN
+    LTEXT   "N° of Points", -1, 10, 95, 50, 10
+    EDITTEXT ID_NPOINT, 60, 93, 30, 12, ES_AUTOHSCROLL | ES_LEFT
+
+    CONTROL "memory 1", ID_MEM1, "BUTTON",  BS_AUTORADIOBUTTON | WS_GROUP,  30,  22, 45, 10
+    CONTROL "memory 2", ID_MEM2, "BUTTON",  BS_AUTORADIOBUTTON,  30,  34, 45, 10
+    CONTROL "memory 3", ID_MEM3, "BUTTON",  BS_AUTORADIOBUTTON,  30,  46, 45, 10
+    CONTROL "memory 4", ID_MEM4, "BUTTON",  BS_AUTORADIOBUTTON,  30,  58, 45, 10
+    CONTROL "memory 5", ID_MEM5, "BUTTON",  BS_AUTORADIOBUTTON,  30,  70, 45, 10
+    GROUPBOX "target", ID_GROUP2, 20, 10, 60, 75, BS_GROUPBOX
+
+    PUSHBUTTON      "&OK",     IDOK,  10, 115,  35, 13
+    PUSHBUTTON "&Annuler", IDCANCEL,  55, 115,  35, 13
+END
+
+GPIBCONNECT DIALOG 50, 30, 120, 75
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Connect with GPIB"
+BEGIN
+   LTEXT " Board Name", -1, 10, 10, 50, 10
+   EDITTEXT ID_BRDNAME, 60, 8, 50, 12, ES_AUTOHSCROLL | ES_LEFT
+   LTEXT "Device Name", -1, 10, 25, 50, 10
+   EDITTEXT ID_DEVNAME, 60, 23, 50, 12, ES_AUTOHSCROLL | ES_LEFT
+   LTEXT "Device Address", -1, 10, 40, 60, 10
+   EDITTEXT ID_DEVAD, 70, 38, 40, 12, ES_AUTOHSCROLL | ES_LEFT
+   PUSHBUTTON      "&OK",     IDOK,  10, 55,  45, 13
+   PUSHBUTTON "&Annuler", IDCANCEL,  65, 55,  45, 13
+END
+
+COUNT DIALOG 100, 50, 210, 115
+STYLE WS_POPUP |  WS_CAPTION |  WS_SYSMENU
+CAPTION "Accumulation"
+BEGIN
+    CTEXT    "Total Counting Number",       -1,  10, 10,  100, 10
+    CTEXT    "Display Counting Number",     -1,  10, 25,  100, 10
+    CTEXT    "Threshold",                   -1,  10, 40,  100, 10
+    CTEXT    "Idling Time (msec)",         -1,  10, 55,  100, 10
+    EDITTEXT ID_NTOT,      112,  8, 86, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_NSEG,      112, 23, 86, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_THRESHOLD, 112, 38, 86, 12, ES_AUTOHSCROLL | ES_LEFT
+    EDITTEXT ID_TIME, 112, 53, 86, 12, ES_AUTOHSCROLL | ES_LEFT
+
+    CONTROL "Upper Bound", ID_OPTION, "BUTTON",  BS_AUTOCHECKBOX,  86, 70, 100, 12
+
+    PUSHBUTTON          "&OK",     IDOK,  55, 95,  40, 13
+    PUSHBUTTON     "&Annuler", IDCANCEL, 115, 95,  40, 13
+END
+
+CANCELDLG DIALOG 150, 10, 140, 50
+STYLE WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+BEGIN
+   CTEXT "", ID_TEXT, 10, 5, 120, 10, WS_CHILD | WS_VISIBLE | WS_GROUP
+   CTEXT "", ID_DONE, 10, 17, 120, 10, WS_CHILD | WS_VISIBLE | WS_GROUP
+   DEFPUSHBUTTON "Cancel", IDCANCEL, 50, 30, 40, 13, WS_CHILD | WS_VISIBLE | WS_TABSTOP
+END
+
+CFighterIcon ICON cft.ico
+SpectrumIcon ICON spectrum.ico
+
+CLUSTER  BITMAP agregat.bmp
+EQ001    BITMAP eq001.bmp
+EQ002    BITMAP eq002.bmp
+EQ003    BITMAP eq003.bmp
+FITEQ01  BITMAP fit001.bmp
+FITEQ02  BITMAP fit002.bmp
+FITEQ03  BITMAP fit003.bmp
+COEFF_a0 BITMAP a0.bmp
+COEFF_a1 BITMAP a1.bmp
+COEFF_a2 BITMAP a2.bmp
+COEFF_a3 BITMAP a3.bmp
+COEFF_a4 BITMAP a4.bmp
+COEFF_a5 BITMAP a5.bmp
+BK1      BITMAP bg1.bmp
+BK2      BITMAP bg2.bmp
+BK3      BITMAP bg3.bmp
+BK4      BITMAP bg4.bmp
+BK5      BITMAP bg5.bmp
+BK6      BITMAP bg6.bmp
+BK7      BITMAP bg7.bmp
+BK8      BITMAP bg8.bmp
