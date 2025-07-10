@@ -3,5 +3,5 @@
 ### Data acqusition using GPIB
 ### Interactive communication through DDE (Dynamic Data Exchange)
 
-<img src="https://github.com/bwyoon/CFighter/blob/master/images/CFighter.png">
+<img src="https://github.com/bwyoon/CFighter/blob/main/images/CFighter.png">
 
